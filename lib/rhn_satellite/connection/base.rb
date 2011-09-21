@@ -3,6 +3,8 @@ module RhnSatellite
     class Base
       class << self
         attr_accessor :hostname, :username, :password, :https
+
+        attr_reader :collection_cmd
         
         def reset
           RhnSatellite::Connection::Handler.reset_instance(self.name)

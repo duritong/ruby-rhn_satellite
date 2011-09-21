@@ -104,7 +104,7 @@ describe RhnSatellite::Connection::Handler do
         a.make_call(1,2).should eql('foo')
       end
   end
-  
+
   describe "#login" do
     it "connects with username and password" do
       a = RhnSatellite::Connection::Handler.instance_for(:login,'blub','user1','password')
@@ -192,5 +192,16 @@ describe RhnSatellite::Connection::Handler do
       end
     end
   end
-  
+  describe "#default_call" do
+    it "delegates everything to a logged in transaction" do
+        a = RhnSatellite::Connection::Handler.instance_for(:logout,'blub','user1','password')
+        a.stubs(:make_call).with('auth.login','user1','password').returns "some_token5"
+        a.expects(:logout).twice
+        a.expects(:make_call).with('some_method','some_token5','arg1','arg2').returns("result")
+        a.expects(:make_call).with('some_method2','some_token5').returns("result2")
+
+        a.default_call('some_method','arg1','arg2').should eql('result')
+        a.default_call('some_method2').should eql('result2')
+    end
+  end
 end

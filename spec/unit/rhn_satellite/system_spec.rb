@@ -15,7 +15,7 @@ describe RhnSatellite::System do
       RhnSatellite::Connection::Handler.any_instance.stubs(:make_call).with("auth.login",'user','pwd').returns("token")
       RhnSatellite::Connection::Handler.any_instance.stubs(:make_call).with("auth.logout",'token')
     end
-    
+
     describe ".all" do
       it "logins and returns a bunch of systems" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns(["123","234"])
@@ -34,7 +34,30 @@ describe RhnSatellite::System do
         RhnSatellite::System.all{|i| ["123","234"].include?(i).should be_true }.should eql(["123","234"])
       end
     end
-    
+
+    describe ".get" do
+      context "with systems" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns([{'name' => "123"},{'name' => "234"}])
+        end
+        it "finds a system in all systems" do
+          RhnSatellite::System.get('123').should eql({'name' => '123'})
+        end
+        
+        it "returns nil on an non-existant system" do
+          RhnSatellite::System.get('12333').should eql(nil)
+        end
+      end
+      context "without any systems" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns([])
+        end
+        it "returns nil" do
+          RhnSatellite::System.get('12333').should eql(nil)
+        end
+      end
+    end
+   
     describe ".relevant_erratas" do
       it "logins and returns a bunch of activation keys" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getRelevantErrata',"token","1").returns(["errata1","errata2"])
@@ -159,28 +182,110 @@ describe RhnSatellite::System do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns([{'name' => "123", 'id' => "1"},{'name' => "234", "id" => "2"}])
         RhnSatellite::System.online?('333123').should be_false
       end
+    end    
+
+    describe ".set_base_channel" do
+      it "should set the base channel" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.setBaseChannel','token',1,'channel').returns(1)
+
+        RhnSatellite::System.set_base_channel('1','channel').should eql(1)
+      end
     end
-    
-    describe ".get" do
-      context "with systems" do
-        before :each do
-          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns([{'name' => "123"},{'name' => "234"}])
-        end
-        it "finds a system in all systems" do
-          RhnSatellite::System.get('123').should eql({'name' => '123'})
-        end
-        
-        it "returns nil on an non-existant system" do
-          RhnSatellite::System.get('12333').should eql(nil)
+
+    describe ".subscribed_base_channel" do
+      it "should get the subscribed base channel" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getSubscribedBaseChannel','token',1).returns({ 'label' => 'some_channel' })
+
+        RhnSatellite::System.subscribed_base_channel('1').should eql({ 'label' => 'some_channel' })
+      end
+    end
+    describe ".subscribable_base_channels" do
+      it "should get the subscribable base channels" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listSubscribableBaseChannels','token',1).returns([{ 'label' => 'some_channel' }])
+
+        RhnSatellite::System.subscribable_base_channels('1').should eql([{ 'label' => 'some_channel' }])
+      end
+    end
+
+    describe ".set_child_channels" do
+      it "should set the child channels" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.setChildChannels','token',1,['channel1','channel2']).returns(1)
+
+        RhnSatellite::System.set_child_channels('1',['channel1','channel2']).should eql(1)
+      end
+    end
+
+    describe ".subscribed_child_channels" do
+      it "lists all the subscribed child channels" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listSubscribedChildChannels','token',1).returns([{ 'label' => 'some_child_channel' }])
+
+        RhnSatellite::System.subscribed_child_channels('1').should eql([{ 'label' => 'some_child_channel' }])
+      end
+    end
+    describe ".subscribable_child_channels" do
+      it "should get the subscribable child channels" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listSubscribableChildChannels','token',1).returns([{ 'label' => 'some_child_channel' }])
+
+        RhnSatellite::System.subscribable_child_channels('1').should eql([{ 'label' => 'some_child_channel' }])
+      end
+    end
+
+    describe ".schedule_apply_errata" do
+      it "should handle single ids correctly" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleApplyErrata','token',[1],[9]).returns(1)
+
+        RhnSatellite::System.schedule_apply_errata(1,9).should eql(1)
+      end
+      context "immeditalely" do
+        it "should schedule the list of errata immediately" do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleApplyErrata','token',[1,2],[9,22]).returns(1)
+
+          RhnSatellite::System.schedule_apply_errata([1,2],[9,22]).should eql(1)
         end
       end
-      context "without any systems" do
-        before :each do
-          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listUserSystems',"token").returns([])
+      context "later" do
+        it "should schedule the list of errata to a later point" do
+          now = DateTime.now.to_s
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleApplyErrata','token',[1,2],[9,22],now).returns(1)
+
+          RhnSatellite::System.schedule_apply_errata([1,2],[9,22],now).should eql(1)
         end
-        it "returns nil" do
-          RhnSatellite::System.get('12333').should eql(nil)
-        end
+      end
+
+    end
+    describe ".schedule_reboot" do
+      it "should schedule a reboot immediately by default" do
+        now = Time.now
+        Time.expects(:now).once.returns(now)
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleReboot','token',1,'foo').returns(1)
+        RhnSatellite::System.schedule_reboot(1).should eql(1)
+      end
+
+      it "should schedule a reboot to a certain time" do
+        later = DateTime.now+600
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleReboot','token',1,'foo').returns(1)
+        RhnSatellite::System.schedule_reboot(1,later).should eql(1)
+
+      end
+    end
+
+    describe ".schedule_package_install" do
+      it "should schedule a package install immediately by default" do
+        now = Time.now
+        Time.expects(:now).once.returns(now)
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.schedulePackageInstall','token',1,[1,2],'foo').returns(1)
+        RhnSatellite::System.schedule_package_install(1,[1,2]).should eql(1)
+      end
+
+      it "should schedule a reboot to a certain time" do
+        later = DateTime.now+600
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.schedulePackageInstall','token',1,[1,2],'foo').returns(1)
+        RhnSatellite::System.schedule_package_install(1,[1,2],later).should eql(1)
+
       end
     end
   end

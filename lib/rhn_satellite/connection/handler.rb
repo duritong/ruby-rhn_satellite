@@ -79,6 +79,10 @@ module RhnSatellite
             def disconnect
                 @connection = nil
             end
+
+            def default_call(cmd,*args)
+              in_transaction(true) {|token| make_call(cmd,token,*args) }
+            end
             
             private                
             def begin_transaction

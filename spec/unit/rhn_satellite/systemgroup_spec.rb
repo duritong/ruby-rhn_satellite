@@ -34,6 +34,28 @@ describe RhnSatellite::Systemgroup do
         RhnSatellite::Systemgroup.all{|i| ["123","234"].include?(i).should be_true }.should eql(["123","234"])
       end
     end
+    describe ".get" do
+      context "with systems" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listAllGroups',"token").returns([{'name' => "123"},{'name' => "234"}])
+        end
+        it "finds a system in all systems" do
+          RhnSatellite::Systemgroup.get('123').should eql({'name' => '123'})
+        end
+
+        it "returns nil on an non-existant system" do
+          RhnSatellite::Systemgroup.get('12333').should eql(nil)
+        end
+      end
+      context "without any systems" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listAllGroups',"token").returns([])
+        end
+        it "returns nil" do
+          RhnSatellite::Systemgroup.get('12333').should eql(nil)
+        end
+      end
+    end
     
     describe ".delete" do
       it "deletes on the api" do

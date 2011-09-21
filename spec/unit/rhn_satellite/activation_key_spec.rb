@@ -32,5 +32,27 @@ describe RhnSatellite::ActivationKey do
       RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with("activationkey.listActivationKeys","token").returns(["123","234"])
       RhnSatellite::ActivationKey.all{|i| ["123","234"].include?(i).should be_true }.should eql(["123","234"])
     end
+    describe ".get" do
+      context "with keys" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('activationkey.listActivationKeys',"token").returns([{'name' => "123"},{'name' => "234"}])
+        end
+        it "finds a key in all keys" do
+          RhnSatellite::ActivationKey.get('123').should eql({'name' => '123'})
+        end
+
+        it "returns nil on an non-existant key" do
+          RhnSatellite::ActivationKey.get('12333').should eql(nil)
+        end
+      end
+      context "without any keys" do
+        before :each do
+          RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('activationkey.listActivationKeys',"token").returns([])
+        end
+        it "returns nil" do
+          RhnSatellite::ActivationKey.get('12333').should eql(nil)
+        end
+      end
+    end
   end
 end
