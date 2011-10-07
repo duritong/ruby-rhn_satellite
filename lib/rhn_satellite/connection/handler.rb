@@ -20,6 +20,10 @@ module RhnSatellite
                     instances.delete(identifier)
                 end
                 
+                def reset_all
+                  @instances = {}
+                end
+
                 private
                 def instances
                     @instances ||= {}

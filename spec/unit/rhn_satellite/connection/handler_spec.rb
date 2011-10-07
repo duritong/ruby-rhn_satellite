@@ -66,6 +66,15 @@ describe RhnSatellite::Connection::Handler do
     end
   end
   
+  describe ".reset_all" do
+    it "resets all connections" do
+      a = RhnSatellite::Connection::Handler.instance_for(:cache_reset)
+      RhnSatellite::Connection::Handler.send(:instances).should_not be_empty
+      RhnSatellite::Connection::Handler.reset_all
+      RhnSatellite::Connection::Handler.send(:instances).should be_empty
+    end
+  end
+
   describe "#connect" do
     it "creates a new connection" do
       RhnSatellite::Connection::Handler.default_hostname = 'connecttest'
