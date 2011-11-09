@@ -71,9 +71,37 @@ describe RhnSatellite::System do
         RhnSatellite::System.relevant_erratas("1").should eql([])      
       end
     end
+
+    describe ".latest_installable_packages" do
+      it "logins and returns a bunch of packages" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestInstallablePackages',"token","1").returns(["package1","package2"])
+        
+        RhnSatellite::System.latest_installable_packages("1").should eql(["package1","package2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestInstallablePackages',"token","1").returns(nil)
+        
+        RhnSatellite::System.latest_installable_packages("1").should eql([])      
+      end
+    end
+    
+    describe ".latest_available_packages" do
+      it "logins and returns a bunch of packages per system" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestAvailablePackages',"token",["1",'2']).returns([['sys1','sysname1',"package1","package2"], ['sys2','sysname2','package3']])
+        
+        RhnSatellite::System.latest_available_packages(["1",'2']).should eql([['sys1','sysname1',"package1","package2"], ['sys2','sysname2','package3']])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestAvailablePackages',"token",["1",'2']).returns(nil)
+        
+        RhnSatellite::System.latest_available_packages(["1",'2']).should eql([])      
+      end
+    end
     
     describe ".latest_upgradable_packages" do
-      it "logins and returns a bunch of activation keys" do
+      it "logins and returns a bunch of packages" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestUpgradablePackages',"token","1").returns(["package1","package2"])
         
         RhnSatellite::System.latest_upgradable_packages("1").should eql(["package1","package2"])

@@ -24,6 +24,14 @@ module RhnSatellite
       def relevant_erratas(system_id)
         base.default_call('system.getRelevantErrata',system_id).to_a
       end
+
+      def latest_available_packages(system_ids)
+        base.default_call('system.listLatestAvailablePackages',system_ids).to_a
+      end
+
+      def latest_installable_packages(system_id)
+        base.default_call('system.listLatestInstallablePackages',system_id).to_a
+      end
       
       def latest_upgradable_packages(system_id)
         base.default_call('system.listLatestUpgradablePackages',system_id).to_a
