@@ -1,4 +1,3 @@
-require 'xmlrpc/client'
 module RhnSatellite
   class ChannelSoftware < RhnSatellite::Connection::Base
     

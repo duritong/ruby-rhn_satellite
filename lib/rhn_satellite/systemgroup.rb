@@ -1,4 +1,3 @@
-require 'xmlrpc/client'
 module RhnSatellite
   class Systemgroup < RhnSatellite::Connection::Base
     collection 'systemgroup.listAllGroups'

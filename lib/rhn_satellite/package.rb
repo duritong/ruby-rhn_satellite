@@ -1,4 +1,3 @@
-require 'xmlrpc/client'
 module RhnSatellite
   class Package < RhnSatellite::Connection::Base
     class << self
