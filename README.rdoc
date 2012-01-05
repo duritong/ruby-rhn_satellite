@@ -14,6 +14,6 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2011 Marcel Haerry. See LICENSE.txt for
+Copyright (c) 2011 duritong. See LICENSE.txt for
 further details.
 

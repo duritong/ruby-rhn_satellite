@@ -1,4 +1,4 @@
-Copyright (c) 2011 Marcel Haerry
+Copyright (c) 2011 duritong
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
