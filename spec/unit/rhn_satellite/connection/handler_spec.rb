@@ -46,11 +46,20 @@ describe RhnSatellite::Connection::Handler do
       RhnSatellite::Connection::Handler.instance_for(:default_pwd2,'bla','user2','secret2').instance_variable_get('@password').should eql('secret2')
     end
 
+    it "takes default timeout if no argument is passed" do
+      RhnSatellite::Connection::Handler.default_timeout = 60
+      RhnSatellite::Connection::Handler.instance_for(:default_timeout,'bla','user','foo',60).instance_variable_get('@timeout').should eql(60)
+    end
+    it "takes passed timeout" do
+      RhnSatellite::Connection::Handler.default_timeout = 60
+      RhnSatellite::Connection::Handler.instance_for(:default_timeout2,'bla','user2','secret2',65).instance_variable_get('@timeout').should eql(65)
+    end
+
     it "defaults https to true" do
       RhnSatellite::Connection::Handler.instance_for(:default_https,'bla','user','secret2').instance_variable_get('@https').should eql(true)
     end
     it "takes passed https setting" do
-      RhnSatellite::Connection::Handler.instance_for(:default_https2,'bla','user2','secret2',false).instance_variable_get('@https').should eql(false)
+      RhnSatellite::Connection::Handler.instance_for(:default_https2,'bla','user2','secret2',30,false).instance_variable_get('@https').should eql(false)
     end
   end
   
@@ -76,9 +85,13 @@ describe RhnSatellite::Connection::Handler do
   end
 
   describe "#connect" do
-    it "creates a new connection" do
+    before :each do
       RhnSatellite::Connection::Handler.default_hostname = 'connecttest'
-      XMLRPC::Client.expects(:new2).with('https://connecttest/rpc/api')
+    end
+
+    it "creates a new connection with the passed timeout" do
+      RhnSatellite::Connection::Handler.default_timeout = 60
+      XMLRPC::Client.expects(:new2).with('https://connecttest/rpc/api',nil,60)
       a = RhnSatellite::Connection::Handler.instance_for(:connect)
       a.connect
     end

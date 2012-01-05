@@ -5,13 +5,14 @@ module RhnSatellite
             include RhnSatellite::Common::Debug
             
             class << self
-                attr_accessor :default_hostname,:default_username, :default_password
+                attr_accessor :default_hostname,:default_username, :default_password, :default_timeout
                 
-                def instance_for(identifier,hostname=nil,username=nil,password=nil,https=true)
+                def instance_for(identifier,hostname=nil,username=nil,password=nil,timeout=nil,https=true)
                     instances[identifier] ||= Handler.new(
                         hostname||default_hostname,
                         username||default_username,
                         password||default_password,
+                        timeout||default_timeout,
                         https
                     )
                 end
@@ -30,10 +31,11 @@ module RhnSatellite
                 end
             end
             
-            def initialize(hostname,username=nil,password=nil,https=true)
+            def initialize(hostname,username=nil,password=nil,timeout=30,https=true)
                 @hostname = hostname
                 @username = username
                 @password = password
+                @timeout = timeout
                 @https = https
             end
             
@@ -77,7 +79,7 @@ module RhnSatellite
 
             def connect
                 debug("Connecting to #{url}")
-                @connection = XMLRPC::Client.new2(url)
+                @connection = XMLRPC::Client.new2(url,nil,@timeout)
             end
             
             def disconnect
