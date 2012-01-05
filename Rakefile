@@ -15,11 +15,11 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "rhn_satellite"
-  gem.homepage = "http://github.com/duritong"
+  gem.homepage = "http://github.com/duritong/ruby-rhn_satellite"
   gem.license = "MIT"
   gem.summary = %Q{RhnSatellite is a ruby api to the RedHat Satellite}
-  gem.description = %Q{It provides an easy way to interact with a RedHat Satellite, by providing various convience methods.}
-  gem.email = "duritong@cronopios.org"
+  gem.description = %Q{It provides an easy way to interact with a RedHat Satellite API.}
+  gem.email = "peter.meier@immerda.ch"
   gem.authors = ["duritong"]
   # dependencies defined in Gemfile
 end

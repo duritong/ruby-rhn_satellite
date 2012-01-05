@@ -1,6 +1,81 @@
 = rhn_satellite
 
-Description goes here.
+RhnSatellite is a ruby api to the RedHat Satellite
+
+It provides an easy way to interact with a RedHat Satellite API. Mainly the XMLRPC calls are wrapped with a few
+methods, so that talking to the API from ruby is much easier.
+
+It is far from complete, but most methods that have been added have been tested and used in real environments with
+the latest satellite. The existing methods should get you an idea how to add missing methods.
+
+Patches (including tests) are welcomed!
+
+RedHat's API is documented here: http://docs.redhat.com/docs/en-US/Red_Hat_Network_Satellite/5.4.1/html/API_Overview/index.html
+
+== Credentials
+
+By default rhn_satellite will look for a yaml containing credentials in `~/.satellite.yaml` or in `/etc/satellite.yaml` .
+This file should contain the following options:
+
+    hostname: satellite.example.com
+    username: foobar
+    password: foobar
+
+However, you can always set later your own credentials for the whole API:
+
+    RhnSatellite::Connection::Handler.default_hostname = 'satellite2.example.com'
+    RhnSatellite::Connection::Handler.default_username = 'testuser'
+    RhnSatellite::Connection::Handler.default_password = 'testpwd'
+
+Or different ones on subparts of the api:
+
+
+    RhnSatellite::Channel.hostname = 'satellite.example.com'
+    RhnSatellite::Channel.username = 'channel'
+    RhnSatellite::Channel.password = 'channel'
+
+== Examples
+
+A few examples should give an idea how things should work:
+
+=== Get a system
+
+Fetch a system from the satellite.
+
+    satellite_system = RhnSatellite::System.get('somenode.example.com')
+
+=== clone channel
+
+Clone a new channel.
+
+    RhnSatellite::ChannelSoftware.clone(
+      'original_label',
+      'new_label',
+      'new_label,
+      "Some clone of original_label",
+      false
+    )
+
+=== Schedule update of all updateable packages
+
+This will get all packages that can be upgraded for a system and will schedule the immediate upgrade of these packages.
+
+    satellite_system = RhnSatellite::System.get('somenode.example.com')
+    packages_to_update = RhnSatellite::System.latest_upgradable_packages(satellite_system['id']).inject({}) { |res,p|
+      # sometimes the satellite lists some weird packages, so we check if they actually exist.
+      key = "#{p['name']}-#{p['version']}-#{p['release']}"
+      if res[key]
+        res[key] = p['to_package_id'] if RhnSatellite::Package.exists?(p['to_package_id'])
+      else
+        res[key] = p['to_package_id']
+      end
+      res
+    }.values.compact
+    if packages_to_update.size > 0
+      now = Time.now
+      patch_time = XMLRPC::DateTime.new(now.year,now.month,now.day,now.hour,now.min, now.sec)
+      RhnSatellite::System.schedule_package_install(satellite_system['id'],packages_to_update,patch_time)
+    end
 
 == Contributing to rhn_satellite
  
