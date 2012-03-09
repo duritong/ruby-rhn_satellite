@@ -5,13 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rhn_satellite}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["duritong"]
-  s.date = %q{2012-01-05}
-  s.description = %q{It provides an easy way to interact with a RedHat Satellite, by providing various convience methods.}
-  s.email = %q{duritong@cronopios.org}
+  s.date = %q{2012-03-09}
+  s.description = %q{It provides an easy way to interact with a RedHat Satellite API.}
+  s.email = %q{peter.meier@immerda.ch}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -35,9 +35,10 @@ Gem::Specification.new do |s|
     "lib/rhn_satellite/common/misc.rb",
     "lib/rhn_satellite/connection/base.rb",
     "lib/rhn_satellite/connection/handler.rb",
-    "lib/rhn_satellite/package.rb",
+    "lib/rhn_satellite/packages.rb",
     "lib/rhn_satellite/system.rb",
     "lib/rhn_satellite/systemgroup.rb",
+    "rhn_satellite.gemspec",
     "spec/spec.opts",
     "spec/spec_helper.rb",
     "spec/unit/rhn_satellite/activation_key_spec.rb",
@@ -49,14 +50,14 @@ Gem::Specification.new do |s|
     "spec/unit/rhn_satellite/common/misc_spec.rb",
     "spec/unit/rhn_satellite/connection/base_spec.rb",
     "spec/unit/rhn_satellite/connection/handler_spec.rb",
-    "spec/unit/rhn_satellite/package_spec.rb",
+    "spec/unit/rhn_satellite/packages_spec.rb",
     "spec/unit/rhn_satellite/system_spec.rb",
     "spec/unit/rhn_satellite/systemgroup_spec.rb"
   ]
-  s.homepage = %q{http://github.com/duritong}
+  s.homepage = %q{http://github.com/duritong/ruby-rhn_satellite}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.0}
   s.summary = %q{RhnSatellite is a ruby api to the RedHat Satellite}
 
   if s.respond_to? :specification_version then
