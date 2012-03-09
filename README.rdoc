@@ -63,12 +63,8 @@ This will get all packages that can be upgraded for a system and will schedule t
     satellite_system = RhnSatellite::System.get('somenode.example.com')
     packages_to_update = RhnSatellite::System.latest_upgradable_packages(satellite_system['id']).inject({}) { |res,p|
       # sometimes the satellite lists some weird packages, so we check if they actually exist.
-      key = "#{p['name']}-#{p['version']}-#{p['release']}"
-      if res[key]
-        res[key] = p['to_package_id'] if RhnSatellite::Package.exists?(p['to_package_id'])
-      else
-        res[key] = p['to_package_id']
-      end
+      key = "#{p['name']}-#{p['version']}-#{p['release']}.#{p['arch']}"
+      res[key] = p['to_package_id'] if RhnSatellite::Packages.exists?(p['to_package_id'])
       res
     }.values.compact
     if packages_to_update.size > 0
