@@ -14,7 +14,7 @@ require 'rhn_satellite/channel_software'
 require 'rhn_satellite/channel_access'
 require 'rhn_satellite/system'
 require 'rhn_satellite/systemgroup'
-require 'rhn_satellite/package'
+require 'rhn_satellite/packages'
 
 if File.exists?(file=File.expand_path('~/.satellite.yaml')) || File.exists?(file='/etc/satellite.yaml')
   require 'yaml'
