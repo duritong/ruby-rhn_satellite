@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rhn_satellite}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["duritong"]
-  s.date = %q{2012-03-09}
+  s.date = %q{2012-10-03}
   s.description = %q{It provides an easy way to interact with a RedHat Satellite API.}
   s.email = %q{peter.meier@immerda.ch}
   s.extra_rdoc_files = [
@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/duritong/ruby-rhn_satellite}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.0}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{RhnSatellite is a ruby api to the RedHat Satellite}
 
   if s.respond_to? :specification_version then
@@ -69,12 +69,14 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<mocha>, ["~> 0.9.10"])
+      s.add_development_dependency(%q<pry>, [">= 0"])
     else
       s.add_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<mocha>, ["~> 0.9.10"])
+      s.add_dependency(%q<pry>, [">= 0"])
     end
   else
     s.add_dependency(%q<rspec>, ["~> 2.3.0"])
@@ -82,6 +84,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<mocha>, ["~> 0.9.10"])
+    s.add_dependency(%q<pry>, [">= 0"])
   end
 end
 
