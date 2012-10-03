@@ -14,6 +14,9 @@ module RhnSatellite
       def list_children(channel_label)
         base.default_call('channel.software.listChildren',channel_label)
       end
+      def list_packages(channel_label)
+        base.default_call('channel.software.listAllPackages',channel_label)
+      end
     end
     
   end
