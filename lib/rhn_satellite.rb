@@ -22,4 +22,5 @@ if File.exists?(file=File.expand_path('~/.satellite.yaml')) || File.exists?(file
   RhnSatellite::Connection::Handler.default_hostname = global_options['hostname']
   RhnSatellite::Connection::Handler.default_username = global_options['username']
   RhnSatellite::Connection::Handler.default_password = global_options['password']
+  RhnSatellite::Connection::Handler.default_https = global_options['https']  
 end
