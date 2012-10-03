@@ -3,13 +3,29 @@ require File.dirname(__FILE__) + '/../../../spec_helper'
 
 describe RhnSatellite::Connection::Handler do
 
-  [:hostname,:username, :password].each do |field|
+  [:hostname,:username, :password, :timeout, :https ].each do |field|
     it "provides a way to set and read a default #{field}" do
       RhnSatellite::Connection::Handler.should respond_to("default_#{field}=")
       RhnSatellite::Connection::Handler.should respond_to("default_#{field}")
     end
   end
-  
+
+  describe 'sane defaults' do
+    describe 'timeout' do
+      it "should default to 30" do
+        RhnSatellite::Test.reset
+        RhnSatellite::Test.timeout.should eql(30)
+      end
+    end
+
+    describe 'https' do
+      it "should default to true" do
+        RhnSatellite::Test.reset
+        RhnSatellite::Test.https.should be_true
+      end
+    end
+  end
+
   describe ".instance_for" do
     it "returns an instance of RhnSatellite::Connection::Handler" do
       RhnSatellite::Connection::Handler.instance_for(:foo).should be_a(RhnSatellite::Connection::Handler) 

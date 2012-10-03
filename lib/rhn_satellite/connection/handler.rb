@@ -5,18 +5,27 @@ module RhnSatellite
             include RhnSatellite::Common::Debug
             
             class << self
-                attr_accessor :default_hostname,:default_username, :default_password, :default_timeout, :default_https
+                attr_accessor :default_hostname,:default_username, :default_password
+                attr_writer :default_timeout, :default_https
                 
                 def instance_for(identifier,hostname=nil,username=nil,password=nil,timeout=nil,https=nil)
                     instances[identifier] ||= Handler.new(
                         hostname||default_hostname,
                         username||default_username,
                         password||default_password,
-                        timeout||default_timeout,
-                        https||default_https,
+                        timeout || default_timeout,
+                        https.nil? ? default_https : https
                     )
                 end
-                
+
+                def default_timeout
+                  @default_timeout ||= 30
+                end
+
+                def default_https
+                  @default_https.nil? ? (@default_https=true) : @default_https
+                end
+
                 def reset_instance(identifier)
                     instances.delete(identifier)
                 end

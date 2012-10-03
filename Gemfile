@@ -11,4 +11,5 @@ group :development do
   gem "jeweler", "~> 1.6.4"
   gem "rcov", ">= 0"
   gem "mocha", "~> 0.9.10"
+  gem "pry"
 end

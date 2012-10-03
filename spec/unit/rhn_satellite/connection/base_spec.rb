@@ -26,7 +26,7 @@ describe RhnSatellite::Connection::Base do
     end
   end
 
-  [:hostname,:username, :password].each do |field|
+  [ :hostname,:username, :password, :timeout, :https ].each do |field|
     describe "##{field}" do
       it "provides a way to set and read a #{field}" do
         RhnSatellite::Test.should respond_to("#{field}=")
@@ -40,5 +40,5 @@ describe RhnSatellite::Connection::Base do
       end
     end
   end
-  
+
 end  
