@@ -6,6 +6,15 @@ module RhnSatellite
       def active_systems
         base.default_call('system.listActiveSystems').to_a
       end
+
+      def delete(system_ids)
+        if system_ids.is_a?(Array)
+          system_ids.map! { |system_id| system_id.to_i }
+          base.default_call('system.deleteSystems',system_ids)
+        else
+          base.default_call('system.deleteSystems',[system_ids.to_i])
+        end
+      end
       
       def details(system_id)
         base.default_call('system.getDetails',system_id.to_i)
