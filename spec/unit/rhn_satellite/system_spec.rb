@@ -177,6 +177,26 @@ describe RhnSatellite::System do
       end
     end
     
+    describe ".delete" do
+      it "logs in and should delete a system ID" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.deleteSystems','token',[1]).returns(1)
+
+        RhnSatellite::System.delete(1).should eql(1)
+      end
+
+      it "logs in and should delete multiple system IDs" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.deleteSystems','token',[1,2]).returns(1)
+
+        RhnSatellite::System.delete([1,2]).should eql(1)
+      end
+
+      it "returns nothing on an inexistant system ID" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.deleteSystems',"token",[1233]).returns(nil)
+        
+        RhnSatellite::System.delete(1233).should eql(nil)
+      end
+    end
+
     describe ".detail" do
       it "logins and returns details of a system" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getDetails',"token",1).returns("foo")
