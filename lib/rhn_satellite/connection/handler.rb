@@ -14,7 +14,7 @@ module RhnSatellite
                         username||default_username,
                         password||default_password,
                         timeout || default_timeout,
-                        https.nil? ? default_https : https
+                        https   || default_https
                     )
                 end
 
