@@ -72,7 +72,7 @@ describe RhnSatellite::Systemgroup do
         RhnSatellite::Systemgroup.create('foogroup','somedesc').should eql("foogroup")
       end
     end
-    
+
     describe ".remove_systems" do
       it "removes systems from a group" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.addOrRemoveSystems',"token",'foogroup',['1','2'],false).returns(true)
@@ -89,6 +89,35 @@ describe RhnSatellite::Systemgroup do
       end
     end
     
+
+    describe ".active_systems" do
+      it "should list active systems in a group" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listActiveSystemsInGroup',"token",'foogroup').returns([1])
+        
+        RhnSatellite::Systemgroup.active_systems('foogroup').should eql([1])
+      end
+
+      it "should list active systems in a group based on given days" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listActiveSystemsInGroup',"token",'foogroup',7).returns([1])
+        
+        RhnSatellite::Systemgroup.active_systems('foogroup',7).should eql([1])
+      end
+    end
+
+    describe ".inactive_systems" do
+      it "should list inactive systems in a group" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listInactiveSystemsInGroup',"token",'foogroup').returns([1])
+        
+        RhnSatellite::Systemgroup.inactive_systems('foogroup').should eql([1])
+      end
+
+      it "should list inactive systems in a group based on given days" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listInactiveSystemsInGroup',"token",'foogroup',7).returns([1])
+        
+        RhnSatellite::Systemgroup.inactive_systems('foogroup',7).should eql([1])
+      end
+    end
+
     [:systems, :systems_safe].each do |m|
       describe ".#{m.to_s}" do
         it "should list the systems" do
