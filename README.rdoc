@@ -1,4 +1,5 @@
 = rhn_satellite
+{<img src="https://secure.travis-ci.org/duritong/ruby-rhn_satellite.png" />}[https://secure.travis-ci.org/duritong/ruby-rhn_satellite.png]
 
 RhnSatellite is a ruby api to the RedHat Satellite
 
