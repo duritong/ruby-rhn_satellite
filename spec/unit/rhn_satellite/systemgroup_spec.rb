@@ -96,12 +96,6 @@ describe RhnSatellite::Systemgroup do
         
         RhnSatellite::Systemgroup.active_systems('foogroup').should eql([1])
       end
-
-      it "should list active systems in a group based on given days" do
-        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('systemgroup.listActiveSystemsInGroup',"token",'foogroup',7).returns([1])
-        
-        RhnSatellite::Systemgroup.active_systems('foogroup',7).should eql([1])
-      end
     end
 
     describe ".inactive_systems" do
