@@ -2,6 +2,9 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
 describe RhnSatellite::Connection::Handler do
+  before(:each) do
+    RhnSatellite::Connection::Handler.reset_defaults
+  end
 
   [:hostname,:username, :password, :timeout, :https ].each do |field|
     it "provides a way to set and read a default #{field}" do
@@ -98,11 +101,19 @@ describe RhnSatellite::Connection::Handler do
     end
   end
 
-  describe "#connect" do
+  describe ".reset_defaults" do
+    it "resets all set defaults" do
+      RhnSatellite::Connection::Handler.default_timeout = 99
+      RhnSatellite::Connection::Handler.reset_defaults
+      RhnSatellite::Connection::Handler.default_timeout.should eql(30)
+    end
+  end
+
+  context "connecting" do
     before :each do
       RhnSatellite::Connection::Handler.default_hostname = 'connecttest'
     end
-
+  describe "#connect" do
     it "creates a new connection with the passed timeout" do
       RhnSatellite::Connection::Handler.default_timeout = 60
       XMLRPC::Client.expects(:new2).with('https://connecttest/rpc/api',nil,60)
@@ -119,6 +130,7 @@ describe RhnSatellite::Connection::Handler do
       a.disconnect
       a.connected?.should eql(false)
     end
+  end
   end
 
   describe "#make_call" do

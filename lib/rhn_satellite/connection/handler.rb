@@ -34,6 +34,10 @@ module RhnSatellite
                   @instances = {}
                 end
 
+                def reset_defaults
+                  @default_hostname = @default_username = @default_password = @default_timeout = @default_https = nil
+                end
+
                 private
                 def instances
                     @instances ||= {}
