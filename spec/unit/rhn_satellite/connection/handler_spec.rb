@@ -13,15 +13,13 @@ describe RhnSatellite::Connection::Handler do
   describe 'sane defaults' do
     describe 'timeout' do
       it "should default to 30" do
-        RhnSatellite::Test.reset
-        RhnSatellite::Test.timeout.should eql(30)
+        RhnSatellite::Connection::Handler.default_timeout.should eql(30)
       end
     end
 
     describe 'https' do
       it "should default to true" do
-        RhnSatellite::Test.reset
-        RhnSatellite::Test.https.should be_true
+        RhnSatellite::Connection::Handler.default_https.should be_true
       end
     end
   end
@@ -64,7 +62,7 @@ describe RhnSatellite::Connection::Handler do
 
     it "takes default timeout if no argument is passed" do
       RhnSatellite::Connection::Handler.default_timeout = 60
-      RhnSatellite::Connection::Handler.instance_for(:default_timeout,'bla','user','foo',60).instance_variable_get('@timeout').should eql(60)
+      RhnSatellite::Connection::Handler.instance_for(:default_timeout,'bla','user','foo').instance_variable_get('@timeout').should eql(60)
     end
     it "takes passed timeout" do
       RhnSatellite::Connection::Handler.default_timeout = 60

@@ -28,6 +28,15 @@ describe RhnSatellite::Connection::Base do
 
   [ :hostname,:username, :password, :timeout, :https ].each do |field|
     describe "##{field}" do
+      it "takes over the default" do
+        RhnSatellite::Test.reset
+        RhnSatellite::Connection::Handler.send("default_#{field}=","bla")
+        RhnSatellite::Test.send(:base).instance_variable_get("@#{field}").should eql("bla")
+      end
+    end
+  end
+  [ :hostname,:username, :password, :timeout, :https ].each do |field|
+    describe "##{field}" do
       it "provides a way to set and read a #{field}" do
         RhnSatellite::Test.should respond_to("#{field}=")
         RhnSatellite::Test.should respond_to("#{field}")
@@ -40,5 +49,4 @@ describe RhnSatellite::Connection::Base do
       end
     end
   end
-
 end  
