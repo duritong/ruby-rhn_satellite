@@ -9,8 +9,7 @@ module RhnSatellite
 
       def delete(system_ids)
         if system_ids.is_a?(Array)
-          system_ids.map! { |system_id| system_id.to_i }
-          base.default_call('system.deleteSystems',system_ids)
+          base.default_call('system.deleteSystems',[*system_ids].collect{|i| i.to_i })
         else
           base.default_call('system.deleteSystems',[system_ids.to_i])
         end
