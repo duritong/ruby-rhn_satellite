@@ -11,6 +11,18 @@ module RhnSatellite
         base.default_call('systemgroup.create',group_name,description)
       end
       
+      def active_systems(group_name)
+        base.default_call('systemgroup.listActiveSystemsInGroup',group_name)
+      end
+
+      def inactive_systems(group_name,days=nil)
+        if days
+          base.default_call('systemgroup.listInactiveSystemsInGroup',group_name,days.to_i)
+        else
+          base.default_call('systemgroup.listInactiveSystemsInGroup',group_name)
+        end
+      end
+      
       def systems(group_name)
         base.default_call('systemgroup.listSystems',group_name)
       end
