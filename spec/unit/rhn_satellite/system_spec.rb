@@ -57,6 +57,15 @@ describe RhnSatellite::System do
         end
       end
     end
+
+    describe '.get_id' do
+      before :each do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getId',"token",'sysname').returns({'name' => "sysname", 'id' => '123'})
+      end
+      it "finds a system id" do
+        RhnSatellite::System.get_id('sysname').should eql({'name' => 'sysname', 'id' => '123'})
+      end
+    end
    
     describe ".relevant_erratas" do
       it "logins and returns a bunch of activation keys" do

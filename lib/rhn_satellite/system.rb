@@ -3,6 +3,10 @@ module RhnSatellite
     collection 'system.listUserSystems'
     class << self
 
+      def get_id(name)
+        base.default_call('system.getId',name)
+      end
+
       def active_systems
         base.default_call('system.listActiveSystems').to_a
       end
