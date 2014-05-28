@@ -337,7 +337,7 @@ describe RhnSatellite::System do
         RhnSatellite::System.schedule_package_install(1,[1,2]).should eql(1)
       end
 
-      it "should schedule a reboot to a certain time" do
+      it "should schedule a package install to a certain time" do
         later = DateTime.now+600
         XMLRPC::DateTime.expects(:new).once.returns('foo')
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.schedulePackageInstall','token',1,[1,2],'foo').returns(1)
