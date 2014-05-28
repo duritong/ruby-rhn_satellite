@@ -86,6 +86,14 @@ module RhnSatellite
       def schedule_package_install(system_id,package_ids,earliest_occurence='now')
         base.default_call('system.schedulePackageInstall',system_id.to_i,package_ids,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
       end
+
+      def script_results(action_id)
+        base.default_call('system.getScriptResults',action_id).to_a
+      end
+
+      def script_action_details(action_id)
+        base.default_call('system.getScriptActionDetails',action_id).to_a
+      end
     end
   end
 end
