@@ -99,6 +99,13 @@ module RhnSatellite
         base.default_call('system.scheduleScriptRun',system_ids,user,group,timeout.to_i,script,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
       end
 
+      def script_results(action_id)
+        base.default_call('system.getScriptResults',action_id).to_a
+      end
+
+      def script_action_details(action_id)
+        base.default_call('system.getScriptActionDetails',action_id).to_a
+      end
     end
   end
 end
