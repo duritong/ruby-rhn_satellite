@@ -33,6 +33,10 @@ module RhnSatellite
         base.default_call('system.getRelevantErrata',system_id).to_a
       end
 
+      def newer_installed_packages(system_id,package_name,version,release,epoch)
+        base.default_call('system.listNewerInstalledPackages',system_id,package_name,version,release,epoch).to_a
+      end
+
       def latest_available_packages(system_ids)
         base.default_call('system.listLatestAvailablePackages',system_ids).to_a
       end
@@ -85,6 +89,22 @@ module RhnSatellite
 
       def schedule_package_install(system_id,package_ids,earliest_occurence='now')
         base.default_call('system.schedulePackageInstall',system_id.to_i,package_ids,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
+      end
+
+      def schedule_script_run(system_id,user,group,timeout,script,earliest_occurence='now')
+        base.default_call('system.scheduleScriptRun',system_id.to_i,user,group,timeout.to_i,script,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
+      end
+
+      def schedule_script_runs(system_ids,user,group,timeout,script,earliest_occurence='now')
+        base.default_call('system.scheduleScriptRun',system_ids,user,group,timeout.to_i,script,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
+      end
+
+      def script_results(action_id)
+        base.default_call('system.getScriptResults',action_id).to_a
+      end
+
+      def script_action_details(action_id)
+        base.default_call('system.getScriptActionDetails',action_id).to_a
       end
     end
   end

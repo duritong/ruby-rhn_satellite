@@ -81,6 +81,20 @@ describe RhnSatellite::System do
       end
     end
 
+    describe ".newer_installed_packages" do
+      it "logins and returns a bunch of packages" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listNewerInstalledPackages',"token","1","kernel","0","0","").returns(["package1","package2"])
+        
+        RhnSatellite::System.newer_installed_packages("1","kernel","0","0","").should eql(["package1","package2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listNewerInstalledPackages',"token","1","noexist","0","0","").returns(nil)
+        
+        RhnSatellite::System.newer_installed_packages("1","noexist","0","0","").should eql([])      
+      end
+    end
+
     describe ".latest_installable_packages" do
       it "logins and returns a bunch of packages" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestInstallablePackages',"token","1").returns(["package1","package2"])
@@ -337,13 +351,60 @@ describe RhnSatellite::System do
         RhnSatellite::System.schedule_package_install(1,[1,2]).should eql(1)
       end
 
-      it "should schedule a reboot to a certain time" do
+      it "should schedule a package install to a certain time" do
         later = DateTime.now+600
         XMLRPC::DateTime.expects(:new).once.returns('foo')
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.schedulePackageInstall','token',1,[1,2],'foo').returns(1)
         RhnSatellite::System.schedule_package_install(1,[1,2],later).should eql(1)
 
       end
+   end
+
+    describe ".schedule_script_run" do
+      it "should schedule a script run immediately by default" do
+        now = Time.now
+        Time.expects(:now).once.returns(now)
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleScriptRun','token',1,'user','group',5,'#!/bin/bash\necho "hello"','foo').returns(1)
+        RhnSatellite::System.schedule_script_run(1,'user','group',5,'#!/bin/bash\necho "hello"').should eql(1)
+      end
+
+      it "should schedule a script run to a certain time" do
+        later = DateTime.now+600
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleScriptRun','token',[1,2],'user','group',5,'#!/bin/bash\necho "hello"','foo').returns(1)
+        RhnSatellite::System.schedule_script_runs([1,2],'user','group',5,'#!/bin/bash\necho "hello"',later).should eql(1)
+
+      end
     end
+
+    describe ".script_results" do
+      it "logins and returns results of a script" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptResults',"token","1").returns(["result1","result2"])
+        
+        RhnSatellite::System.script_results("1").should eql(["result1","result2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptResults',"token","1").returns(nil)
+        
+        RhnSatellite::System.script_results("1").should eql([])      
+      end
+    end
+
+    describe ".script_action_details" do
+      it "logins and returns details of a script" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptActionDetails',"token","1").returns(["details1","details2"])
+        
+        RhnSatellite::System.script_action_details("1").should eql(["details1","details2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptActionDetails',"token","1").returns(nil)
+        
+        RhnSatellite::System.script_action_details("1").should eql([])      
+      end
+    end
+
   end
 end
