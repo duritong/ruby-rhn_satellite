@@ -90,6 +90,15 @@ module RhnSatellite
       def schedule_package_install(system_id,package_ids,earliest_occurence='now')
         base.default_call('system.schedulePackageInstall',system_id.to_i,package_ids,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
       end
+
+      def schedule_script_run(system_id,user,group,timeout,script,earliest_occurence='now')
+        base.default_call('system.scheduleScriptRun',system_id.to_i,user,group,timeout.to_i,script,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
+      end
+
+      def schedule_script_runs(system_ids,user,group,timeout,script,earliest_occurence='now')
+        base.default_call('system.scheduleScriptRun',system_ids,user,group,timeout.to_i,script,RhnSatellite::Common::Misc.gen_date_time(earliest_occurence))
+      end
+
     end
   end
 end

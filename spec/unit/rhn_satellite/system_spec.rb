@@ -358,6 +358,24 @@ describe RhnSatellite::System do
         RhnSatellite::System.schedule_package_install(1,[1,2],later).should eql(1)
 
       end
+   end
+
+    describe ".schedule_script_run" do
+      it "should schedule a script run immediately by default" do
+        now = Time.now
+        Time.expects(:now).once.returns(now)
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleScriptRun','token',1,'user','group',5,'#!/bin/bash\necho "hello"','foo').returns(1)
+        RhnSatellite::System.schedule_script_run(1,'user','group',5,'#!/bin/bash\necho "hello"').should eql(1)
+      end
+
+      it "should schedule a script run to a certain time" do
+        later = DateTime.now+600
+        XMLRPC::DateTime.expects(:new).once.returns('foo')
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.scheduleScriptRun','token',[1,2],'user','group',5,'#!/bin/bash\necho "hello"','foo').returns(1)
+        RhnSatellite::System.schedule_script_runs([1,2],'user','group',5,'#!/bin/bash\necho "hello"',later).should eql(1)
+
+      end
     end
   end
 end
