@@ -11,6 +11,10 @@ module RhnSatellite
         base.default_call('schedule.cancelActions',action_ids)
       end
 
+      def delete_actions(action_ids)
+        base.default_call('schedule.deleteActions',action_ids)
+      end
+
       def list_all_actions
         base.default_call('schedule.listAllActions').to_a
       end
@@ -24,7 +28,7 @@ module RhnSatellite
       end
 
       def list_completed_systems(action_id)
-        base.default_call('schedule.listCompletedSystems',action_id.to_i).to_a
+        base.default_call('schedule.listCompletedSystems',action_id).to_a
       end
 
       def list_failed_actions
@@ -32,7 +36,7 @@ module RhnSatellite
       end
 
       def list_failed_systems(action_id)
-        base.default_call('schedule.listFailedSystems',action_id.to_i).to_a
+        base.default_call('schedule.listFailedSystems',action_id).to_a
       end
 
       def list_in_progress_actions
@@ -40,7 +44,7 @@ module RhnSatellite
       end
 
       def list_in_progress_systems(action_id)
-        base.default_call('schedule.listInProgressSystems',action_id.to_i).to_a
+        base.default_call('schedule.listInProgressSystems',action_id).to_a
       end
 
       def reschedule_actions(action_ids,only_failed)
