@@ -4,20 +4,21 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{rhn_satellite}
+  s.name = "rhn_satellite"
   s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["duritong"]
-  s.date = %q{2012-10-03}
-  s.description = %q{It provides an easy way to interact with a RedHat Satellite API.}
-  s.email = %q{peter.meier@immerda.ch}
+  s.date = "2014-06-03"
+  s.description = "It provides an easy way to interact with a RedHat Satellite API."
+  s.email = "peter.meier@immerda.ch"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
   ]
   s.files = [
     ".rspec",
+    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -36,6 +37,7 @@ Gem::Specification.new do |s|
     "lib/rhn_satellite/connection/base.rb",
     "lib/rhn_satellite/connection/handler.rb",
     "lib/rhn_satellite/packages.rb",
+    "lib/rhn_satellite/schedule.rb",
     "lib/rhn_satellite/system.rb",
     "lib/rhn_satellite/systemgroup.rb",
     "rhn_satellite.gemspec",
@@ -51,40 +53,35 @@ Gem::Specification.new do |s|
     "spec/unit/rhn_satellite/connection/base_spec.rb",
     "spec/unit/rhn_satellite/connection/handler_spec.rb",
     "spec/unit/rhn_satellite/packages_spec.rb",
+    "spec/unit/rhn_satellite/schedule_spec.rb",
     "spec/unit/rhn_satellite/system_spec.rb",
     "spec/unit/rhn_satellite/systemgroup_spec.rb"
   ]
-  s.homepage = %q{http://github.com/duritong/ruby-rhn_satellite}
+  s.homepage = "http://github.com/duritong/ruby-rhn_satellite"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{RhnSatellite is a ruby api to the RedHat Satellite}
+  s.rubygems_version = "2.0.14"
+  s.summary = "RhnSatellite is a ruby api to the RedHat Satellite"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.4.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<mocha>, ["~> 0.9.10"])
-      s.add_development_dependency(%q<pry>, [">= 0"])
     else
-      s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<rdoc>, [">= 0"])
+      s.add_dependency(%q<rspec>, ["~> 2.4.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
-      s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<mocha>, ["~> 0.9.10"])
-      s.add_dependency(%q<pry>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rspec>, ["~> 2.3.0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<rdoc>, [">= 0"])
+    s.add_dependency(%q<rspec>, ["~> 2.4.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
-    s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<mocha>, ["~> 0.9.10"])
-    s.add_dependency(%q<pry>, [">= 0"])
   end
 end
 
