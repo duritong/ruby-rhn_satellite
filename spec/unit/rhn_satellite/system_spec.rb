@@ -81,6 +81,20 @@ describe RhnSatellite::System do
       end
     end
 
+    describe ".newer_installed_packages" do
+      it "logins and returns a bunch of packages" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listNewerInstalledPackages',"token","1","kernel","0","0","").returns(["package1","package2"])
+        
+        RhnSatellite::System.newer_installed_packages("1","kernel","0","0","").should eql(["package1","package2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listNewerInstalledPackages',"token","1","noexist","0","0","").returns(nil)
+        
+        RhnSatellite::System.newer_installed_packages("1","noexist","0","0","").should eql([])      
+      end
+    end
+
     describe ".latest_installable_packages" do
       it "logins and returns a bunch of packages" do
         RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.listLatestInstallablePackages',"token","1").returns(["package1","package2"])

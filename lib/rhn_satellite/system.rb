@@ -33,6 +33,10 @@ module RhnSatellite
         base.default_call('system.getRelevantErrata',system_id).to_a
       end
 
+      def newer_installed_packages(system_id,package_name,version,release,epoch)
+        base.default_call('system.listNewerInstalledPackages',system_id,package_name,version,release,epoch).to_a
+      end
+
       def latest_available_packages(system_ids)
         base.default_call('system.listLatestAvailablePackages',system_ids).to_a
       end
