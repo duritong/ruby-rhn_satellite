@@ -377,5 +377,34 @@ describe RhnSatellite::System do
 
       end
     end
+
+    describe ".script_results" do
+      it "logins and returns results of a script" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptResults',"token","1").returns(["result1","result2"])
+        
+        RhnSatellite::System.script_results("1").should eql(["result1","result2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptResults',"token","1").returns(nil)
+        
+        RhnSatellite::System.script_results("1").should eql([])      
+      end
+    end
+
+    describe ".script_action_details" do
+      it "logins and returns details of a script" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptActionDetails',"token","1").returns(["details1","details2"])
+        
+        RhnSatellite::System.script_action_details("1").should eql(["details1","details2"])
+      end
+      
+      it "returns an empty array on an empty answer" do
+        RhnSatellite::Connection::Handler.any_instance.expects(:make_call).with('system.getScriptActionDetails',"token","1").returns(nil)
+        
+        RhnSatellite::System.script_action_details("1").should eql([])      
+      end
+    end
+
   end
 end
