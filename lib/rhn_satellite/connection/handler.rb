@@ -5,16 +5,17 @@ module RhnSatellite
             include RhnSatellite::Common::Debug
             
             class << self
-                attr_accessor :default_hostname,:default_username, :default_password
+                attr_accessor :default_hostname,:default_username, :default_password, :default_https_verify
                 attr_writer :default_timeout, :default_https
                 
-                def instance_for(identifier,hostname=nil,username=nil,password=nil,timeout=nil,https=nil)
+                def instance_for(identifier,hostname=nil,username=nil,password=nil,timeout=nil,https=nil,https_verify=nil)
                     instances[identifier] ||= Handler.new(
                         hostname||default_hostname,
                         username||default_username,
                         password||default_password,
                         timeout || default_timeout,
-                        https.nil? ? default_https : https
+                        https.nil? ? default_https : https,
+                        https_verify.nil? ? default_https_verify : https_verify
                     )
                 end
 
@@ -24,6 +25,10 @@ module RhnSatellite
 
                 def default_https
                   @default_https.nil? ? (@default_https=true) : @default_https
+                end
+
+                def default_https_verify
+                  @default_https_verify.nil? ? (@default_https_verify=true) : @default_https_verify
                 end
 
                 def reset_instance(identifier)
@@ -44,12 +49,13 @@ module RhnSatellite
                 end
             end
             
-            def initialize(hostname,username=nil,password=nil,timeout=30,https=true)
+            def initialize(hostname,username=nil,password=nil,timeout=30,https=true,https_verify=true)
                 @hostname = hostname
                 @username = username
                 @password = password
                 @timeout = timeout
                 @https = https
+                @https_verify = https_verify
             end
             
             def login(duration=nil)
@@ -93,6 +99,10 @@ module RhnSatellite
             def connect
                 debug("Connecting to #{url}")
                 @connection = XMLRPC::Client.new2(url,nil,@timeout)
+                if !@https_verify
+                  @connection.instance_variable_get(:@http).instance_variable_set(:@verify_mode, OpenSSL::SSL::VERIFY_NONE)
+                end
+                @connection
             end
             
             def disconnect
