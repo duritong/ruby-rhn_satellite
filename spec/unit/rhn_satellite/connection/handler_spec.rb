@@ -147,7 +147,7 @@ describe RhnSatellite::Connection::Handler do
       it "disables ssl verification" do
         RhnSatellite::Connection::Handler.default_https_verify = false
         a = RhnSatellite::Connection::Handler.instance_for(:connect)
-        a.connect.instance_variable_get(:@http).verify_mode.should eq OpenSSL::SSL::VERIFY_NONE
+        a.connect.instance_variable_get(:@http).instance_variable_get(:@verify_mode).should eq OpenSSL::SSL::VERIFY_NONE
       end
     end
   end
