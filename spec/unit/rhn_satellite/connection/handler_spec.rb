@@ -139,7 +139,7 @@ describe RhnSatellite::Connection::Handler do
       it "uses ssl verification" do
         RhnSatellite::Connection::Handler.default_https_verify = true
         a = RhnSatellite::Connection::Handler.instance_for(:connect)
-        a.connect.instance_variable_get(:@http).verify_mode.should_not eq OpenSSL::SSL::VERIFY_NONE
+        a.connect.instance_variable_get(:@http).instance_variable_get(:@verify_mode).should_not eq OpenSSL::SSL::VERIFY_NONE
       end
     end
 
