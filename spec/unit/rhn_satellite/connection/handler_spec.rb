@@ -25,6 +25,12 @@ describe RhnSatellite::Connection::Handler do
         RhnSatellite::Connection::Handler.default_https.should be_true
       end
     end
+
+    describe 'https_verify' do
+      it "should default to true" do
+        RhnSatellite::Connection::Handler.default_https_verify.should be_true
+      end
+    end
   end
 
   describe ".instance_for" do
@@ -78,6 +84,14 @@ describe RhnSatellite::Connection::Handler do
     it "takes passed https setting" do
       RhnSatellite::Connection::Handler.instance_for(:default_https2,'bla','user2','secret2',30,false).instance_variable_get('@https').should eql(false)
     end
+
+    it "defaults https_verify to true" do
+      RhnSatellite::Connection::Handler.instance_for(:default_https_verify,'bla','user','secret2').instance_variable_get('@https_verify').should eql(true)
+    end
+
+    it "takes passed https_verify setting" do
+      RhnSatellite::Connection::Handler.instance_for(:default_https_verify2,'bla','user2','secret2',30,false,false).instance_variable_get('@https_verify').should eql(false)
+    end
   end
   
   describe ".reset" do
@@ -111,6 +125,7 @@ describe RhnSatellite::Connection::Handler do
 
   context "connecting" do
     before :each do
+      RhnSatellite::Connection::Handler.reset_instance(:connect)
       RhnSatellite::Connection::Handler.default_hostname = 'connecttest'
     end
   describe "#connect" do
@@ -119,6 +134,21 @@ describe RhnSatellite::Connection::Handler do
       XMLRPC::Client.expects(:new2).with('https://connecttest/rpc/api',nil,60)
       a = RhnSatellite::Connection::Handler.instance_for(:connect)
       a.connect
+    end
+    context 'when ssl_verify is true' do
+      it "uses ssl verification" do
+        RhnSatellite::Connection::Handler.default_https_verify = true
+        a = RhnSatellite::Connection::Handler.instance_for(:connect)
+        a.connect.instance_variable_get(:@http).instance_variable_get(:@verify_mode).should_not eq OpenSSL::SSL::VERIFY_NONE
+      end
+    end
+
+    context 'when ssl_verify is false' do
+      it "disables ssl verification" do
+        RhnSatellite::Connection::Handler.default_https_verify = false
+        a = RhnSatellite::Connection::Handler.instance_for(:connect)
+        a.connect.instance_variable_get(:@http).instance_variable_get(:@verify_mode).should eq OpenSSL::SSL::VERIFY_NONE
+      end
     end
   end
   
