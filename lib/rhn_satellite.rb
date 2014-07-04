@@ -16,6 +16,7 @@ require 'rhn_satellite/schedule'
 require 'rhn_satellite/system'
 require 'rhn_satellite/systemgroup'
 require 'rhn_satellite/packages'
+require 'rhn_satellite/kickstart'
 
 if File.exists?(file=File.expand_path('~/.satellite.yaml')) || File.exists?(file='/etc/satellite.yaml')
   require 'yaml'
